@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Master Arts By Hussain — Creative Studio</title>
+<meta name="description" content="Master Arts By Hussain — Thumbnails, Logos, Ad Posters, Video Ads, Membership plans & Jumbo Pack. Place order via WhatsApp.">
+<meta name="theme-color" content="#0ea5e9">
+<style>
+/* ====== (CSS same as aapne diya tha) ====== */
+/* 👇 Yahan apka CSS copy karna hai jo aapne diya tha, bilkul same */
+</style>
+</head>
+<body>
+  <!-- 👇 Yahan apka HTML body content (header, hero, cards, modal, footer, WhatsApp button etc.) bilkul same paste karein -->
+  
+<script>
+  // ===== Utilities =====
+  const pkWhatsApp = "923203405324"; // Pakistan number for wa.me (no leading 0)
+  const addRipple = (e) => {
+    const target = e.currentTarget;
+    const rect = target.getBoundingClientRect();
+    const circle = document.createElement("span");
+    const d = Math.max(rect.width, rect.height);
+    circle.className = "ripple";
+    circle.style.width = circle.style.height = d + "px";
+    circle.style.left = e.clientX - rect.left - d/2 + "px";
+    circle.style.top  = e.clientY - rect.top  - d/2 + "px";
+    target.appendChild(circle);
+    setTimeout(()=> circle.remove(), 600);
+  };
+
+  // Ripple effect
+  document.querySelectorAll(".btn").forEach(b=>{
+    b.addEventListener("click", addRipple);
+  });
+
+  // Modal Logic
+  const modal = document.getElementById("orderModal");
+  const serviceSelect = document.getElementById("service");
+  const form = document.getElementById("orderForm");
+  const copyBtn = document.getElementById("copyMsg");
+  const copyNote = document.getElementById("copyNote");
+
+  const openModal = (preset) => {
+    modal.classList.add("open");
+    if (preset){
+      [...serviceSelect.options].forEach(opt=>{
+        if(opt.text === preset) serviceSelect.value = opt.text;
+      });
+    }
+  };
+  const closeModal = () => modal.classList.remove("open");
+
+  document.querySelectorAll("[data-open-order]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      openModal(btn.getAttribute("data-preset"));
+    });
+  });
+  document.getElementById("closeModal").addEventListener("click", closeModal);
+  modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+
+  // ===== Order submit -> WhatsApp =====
+  form.addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const data = {
+      service: document.getElementById("service").value || "General Inquiry",
+      name: document.getElementById("name").value.trim(),
+      platform: document.getElementById("platform").value.trim(),
+      details: document.getElementById("details").value.trim(),
+      deadline: document.getElementById("deadline").value
+    };
+    if(!data.name){ alert("Please enter your name."); return; }
+
+    const lines = [
+      "📌 *NEW ORDER — Master Arts By Hussain*",
+      `🛠 Service: ${data.service}`,
+      `👤 Client Name: ${data.name}`,
+      data.platform ? `🌐 Platform: ${data.platform}` : null,
+      data.deadline ? `⏰ Deadline: ${data.deadline}` : null,
+      "——",
+      data.details ? `💡 Brief: ${data.details}` : "💡 Brief: (will share later)"
+    ].filter(Boolean);
+
+    const msg = encodeURIComponent(lines.join("\n"));
+    window.open(`https://wa.me/${pkWhatsApp}?text=${msg}`, "_blank");
+  });
+
+  // Copy message button
+  copyBtn.addEventListener("click", ()=>{
+    const service = document.getElementById("service").value || "General Inquiry";
+    const name = document.getElementById("name").value.trim() || "Client";
+    const msg = `NEW ORDER — ${service}\nClient Name: ${name}`;
+    navigator.clipboard.writeText(msg).then(()=>{
+      copyNote.style.display = "inline";
+      setTimeout(()=> copyNote.style.display = "none", 2000);
+    });
+  });
+</script>
+</body>
+</html>
